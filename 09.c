@@ -2,18 +2,16 @@
 #include <stdlib.h>
 
 struct marble {
-    long val;
-    struct marble *next;
-    struct marble *prev;
+    size_t next;
+    size_t prev;
 };
 
 typedef struct marble marble_s;
 
 long get_high_score(int nb_players, int last_marble) {
-    marble_s *marble = malloc(sizeof(marble_s));
-    marble->val = 0;
-    marble->next = marble;
-    marble->prev = marble;
+    marble_s *marbles = calloc((last_marble + 1), sizeof(marble_s));
+    marble_s marble;
+    size_t current = 0;
 
     long *scores = calloc(nb_players, sizeof(long));
 
@@ -22,32 +20,24 @@ long get_high_score(int nb_players, int last_marble) {
     for (long v=1; v<=last_marble; v++) {
         if (v % 23 == 0) {
             for (int i=0; i<7; i++) {
-                marble = marble->prev;
+                current = marbles[current].prev;
             }
 
-            scores[p] += (v + marble->val);
+            scores[p] += (v + current);
 
-            marble_s *prev = marble->prev;
-            marble_s *next = marble->next;
-
-            prev->next = next;
-            next->prev = prev;
-            free(marble);
-            marble = next;
+            marble = marbles[current];
+            marbles[marble.prev].next = marble.next;
+            marbles[marble.next].prev = marble.prev;
+            current = marble.next;
         } else {
-            marble = marble->next->next;
+            size_t lhs = marbles[current].next;
+            size_t rhs = marbles[lhs].next;
 
-            marble_s *prev = marble->prev;
-
-            marble_s *new_m = malloc(sizeof(marble_s));
-            new_m->val = v;
-            new_m->prev = prev;
-            new_m->next = marble;
-
-            prev->next = new_m;
-            marble->prev = new_m;
-
-            marble = new_m;
+            marbles[lhs].next = v;
+            marbles[rhs].prev = v;
+            marbles[v].prev = lhs;
+            marbles[v].next = rhs;
+            current = v;
         }
 
         p += 1;
@@ -64,22 +54,13 @@ long get_high_score(int nb_players, int last_marble) {
         }
     }
 
-    marble_s *ref = marble;
-    marble_s *next;
-
-    while (marble->next != ref) {
-        next = marble->next;
-        free(marble);
-        marble = next;
-    }
-
-    free(marble);
+    free(marbles);
     free(scores);
 
     return hs;
 }
 
-int main(int argc, char **argv) {
+int main(void) {
     printf("Part 1: %ld\n", get_high_score(458, 72019));
     printf("Part 2: %ld\n", get_high_score(458, 7201900));
 }
