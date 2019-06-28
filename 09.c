@@ -2,42 +2,54 @@
 #include <stdlib.h>
 
 struct marble {
-    size_t next;
-    size_t prev;
+    long val;
+    struct marble *next;
+    struct marble *prev;
 };
 
 typedef struct marble marble_s;
 
-long get_high_score(int nb_players, int last_marble) {
-    marble_s *marbles = calloc((last_marble + 1), sizeof(marble_s));
-    marble_s marble;
-    size_t current = 0;
+long get_high_score(int nb_players, int num_marbles) {
+    int c = 0;
+    marble_s *marbles = malloc(sizeof(marble_s) * num_marbles);
+
+    marble_s *marble = &marbles[c++];
+    marble->val = 0;
+    marble->next = marble;
+    marble->prev = marble;
 
     long *scores = calloc(nb_players, sizeof(long));
 
     int p = 0;
 
-    for (long v=1; v<=last_marble; v++) {
+    for (long v=1; v<=num_marbles; v++) {
         if (v % 23 == 0) {
             for (int i=0; i<7; i++) {
-                current = marbles[current].prev;
+                marble = marble->prev;
             }
 
-            scores[p] += (v + current);
+            scores[p] += (v + marble->val);
 
-            marble = marbles[current];
-            marbles[marble.prev].next = marble.next;
-            marbles[marble.next].prev = marble.prev;
-            current = marble.next;
+            marble_s *prev = marble->prev;
+            marble_s *next = marble->next;
+
+            prev->next = next;
+            next->prev = prev;
+            marble = next;
         } else {
-            size_t lhs = marbles[current].next;
-            size_t rhs = marbles[lhs].next;
+            marble = marble->next->next;
 
-            marbles[lhs].next = v;
-            marbles[rhs].prev = v;
-            marbles[v].prev = lhs;
-            marbles[v].next = rhs;
-            current = v;
+            marble_s *prev = marble->prev;
+
+            marble_s *new_m = &marbles[c++];
+            new_m->val = v;
+            new_m->prev = prev;
+            new_m->next = marble;
+
+            prev->next = new_m;
+            marble->prev = new_m;
+
+            marble = new_m;
         }
 
         p += 1;
