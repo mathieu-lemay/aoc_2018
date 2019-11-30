@@ -1,8 +1,7 @@
 #! /usr/bin/env python
 
-from itertools import groupby
-
 import os.path
+from itertools import groupby
 
 
 class FoundIt(Exception):
@@ -12,7 +11,7 @@ class FoundIt(Exception):
 sr_with_d = []
 sr_with_t = []
 
-with open(os.path.join('input', '02.txt')) as f:
+with open(os.path.join("input", "02.txt")) as f:
     inputs = f.readlines()
 
 for sr in inputs:
@@ -27,7 +26,7 @@ for sr in inputs:
 count_d = len(sr_with_d)
 count_t = len(sr_with_t)
 
-print('Part 1 -> D: %d, T: %d, C: %d' % (count_d, count_t, count_d * count_t))
+print("Part 1 -> D: %d, T: %d, C: %d" % (count_d, count_t, count_d * count_t))
 
 srs = list(set(sr_with_d + sr_with_t))
 
@@ -35,7 +34,7 @@ try:
     for s1 in srs[:-1]:
         for s2 in srs[1:]:
             nb_d = 0
-            s3 = ''
+            s3 = ""
             for i, j in zip(s1, s2):
                 if i == j:
                     s3 += i

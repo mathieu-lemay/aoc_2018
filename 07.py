@@ -15,9 +15,9 @@ class Step:
         # attrs = ', '.join('%s=%s' % (k, v) for k, v in self.__dict__.items())
         # return '<%s(%s)>' % (cname, attrs)
 
-        prevs = ', '.join(s.id for s in self.prevs)
-        nexts = ', '.join(s.id for s in self.nexts)
-        return '<%s(id=%s, prevs=[%s], nexts=[%s])>' % (cname, self.id, prevs, nexts)
+        prevs = ", ".join(s.id for s in self.prevs)
+        nexts = ", ".join(s.id for s in self.nexts)
+        return "<%s(id=%s, prevs=[%s], nexts=[%s])>" % (cname, self.id, prevs, nexts)
 
 
 class Worker:
@@ -30,8 +30,10 @@ class Worker:
 def main():
     steps = {}
 
-    with open(os.path.join('input', '07.txt')) as f:
-        matcher = re.compile(r'Step ([A-Z]) must be finished before step ([A-Z]) can begin.')
+    with open(os.path.join("input", "07.txt")) as f:
+        matcher = re.compile(
+            r"Step ([A-Z]) must be finished before step ([A-Z]) can begin."
+        )
 
         for l in f:
             m = matcher.match(l)
@@ -58,14 +60,17 @@ def main():
     done = []
 
     while queue:
-        n = next(s for s in sorted(queue, key=lambda x: x.id)
-                 if all(i.id in done for i in s.prevs))
+        n = next(
+            s
+            for s in sorted(queue, key=lambda x: x.id)
+            if all(i.id in done for i in s.prevs)
+        )
         queue.remove(n)
 
         done.append(n.id)
         queue += [s for s in n.nexts if s not in queue]
 
-    print('Part 1 -> %s' % ''.join(done))
+    print("Part 1 -> %s" % "".join(done))
 
     queue = [s for s in steps.values() if not s.prevs]
     done = []
@@ -85,19 +90,25 @@ def main():
                     w.remaining = None
 
             if not w.step:
-                step = next((s for s in sorted(queue, key=lambda x: x.id)
-                            if all(i.id in done for i in s.prevs)), None)
+                step = next(
+                    (
+                        s
+                        for s in sorted(queue, key=lambda x: x.id)
+                        if all(i.id in done for i in s.prevs)
+                    ),
+                    None,
+                )
 
                 if step:
                     # print('[%d] Worker %d taking step %s (%s)' % (time, w.id, step.id, [s.id for s in step.prevs]))
                     w.step = step
-                    w.remaining = 61 + ord(step.id) - ord('A')
+                    w.remaining = 61 + ord(step.id) - ord("A")
 
                     queue.remove(step)
                     queue += [s for s in step.nexts if s not in queue]
 
-    print('Part 2 -> %d (%s)' % (time, ''.join(done)))
+    print("Part 2 -> %d (%s)" % (time, "".join(done)))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

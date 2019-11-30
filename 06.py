@@ -14,8 +14,8 @@ class Point:
 
     def __repr__(self):
         cname = self.__class__.__name__
-        attrs = ', '.join('%s=%s' % (k, v) for k, v in self.__dict__.items())
-        return '<%s(%s)>' % (cname, attrs)
+        attrs = ", ".join("%s=%s" % (k, v) for k, v in self.__dict__.items())
+        return "<%s(%s)>" % (cname, attrs)
 
     def distance(self, o):
         return abs(self.x - o.x) + abs(self.y - o.y)
@@ -24,9 +24,9 @@ class Point:
 def main():
     coordinates = []
 
-    with open(os.path.join('input', '06.txt')) as f:
+    with open(os.path.join("input", "06.txt")) as f:
         for idx, l in enumerate(f):
-            x, y = [int(i.strip()) for i in l.split(',')]
+            x, y = [int(i.strip()) for i in l.split(",")]
             coordinates.append(Point(idx + 1, x, y))
 
     min_x = min(c.x for c in coordinates) - 10
@@ -54,11 +54,18 @@ def main():
             if len(closest_points) == 1:
                 arr[x, y] = closest_points[0].id
 
-    edge_ids = set(arr[0, :]) | set(arr[w-1, :]) | set(arr[:, 0]) | set(arr[:, h-1])
+    edge_ids = set(arr[0, :]) | set(arr[w - 1, :]) | set(arr[:, 0]) | set(arr[:, h - 1])
 
-    counts = sorted([(id_, c) for id_, c in zip(*np.unique(arr, return_counts=True)) if id_ not in edge_ids],
-                    key=lambda x: x[1], reverse=True)
-    print('Part 1 ->', counts[0][1])
+    counts = sorted(
+        [
+            (id_, c)
+            for id_, c in zip(*np.unique(arr, return_counts=True))
+            if id_ not in edge_ids
+        ],
+        key=lambda x: x[1],
+        reverse=True,
+    )
+    print("Part 1 ->", counts[0][1])
 
     min_x = min(c.x for c in coordinates)
     max_x = max(c.x for c in coordinates)
@@ -77,10 +84,13 @@ def main():
             if total_distance < 10000:
                 arr[x, y] = 1
 
-    counts = sorted([(id_, c) for id_, c in zip(*np.unique(arr, return_counts=True))],
-                    key=lambda x: x[1], reverse=True)
-    print('Part 2 ->', int(arr.sum()))
+    counts = sorted(
+        [(id_, c) for id_, c in zip(*np.unique(arr, return_counts=True))],
+        key=lambda x: x[1],
+        reverse=True,
+    )
+    print("Part 2 ->", int(arr.sum()))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

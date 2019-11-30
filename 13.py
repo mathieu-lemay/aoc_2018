@@ -7,20 +7,20 @@ from time import time
 
 class Direction(Enum):
     # Rail
-    ALL = '+'
-    UD = '|'
-    LR = '-'
-    LD_UR = '\\'
-    LU_DR = '/'
+    ALL = "+"
+    UD = "|"
+    LR = "-"
+    LD_UR = "\\"
+    LU_DR = "/"
 
     # Cart
-    UP = '^'
-    DOWN = 'v'
-    LEFT = '<'
-    RIGHT = '>'
+    UP = "^"
+    DOWN = "v"
+    LEFT = "<"
+    RIGHT = ">"
 
     # Nothing
-    NONE = ' '
+    NONE = " "
 
 
 class Element:
@@ -87,7 +87,7 @@ class Cart(Element):
         self.next_turn = {
             Direction.LEFT: Direction.ALL,
             Direction.ALL: Direction.RIGHT,
-            Direction.RIGHT: Direction.LEFT
+            Direction.RIGHT: Direction.LEFT,
         }[self.next_turn]
 
 
@@ -97,7 +97,7 @@ def get_dir_delta(direction):
         Direction.DOWN: (0, 1),
         Direction.LEFT: (-1, 0),
         Direction.RIGHT: (1, 0),
-        None: (0, 0)
+        None: (0, 0),
     }[direction]
 
 
@@ -153,18 +153,18 @@ def main():
     rails = []
     carts = []
 
-    with open(os.path.join('input', '13.txt')) as f:
+    with open(os.path.join("input", "13.txt")) as f:
         y = 0
         c_id = 1
         for l in f.readlines():
             rr = []
             for x, c in enumerate(l):
-                if c in '|-/\\+ ':
+                if c in "|-/\\+ ":
                     rr.append(Rail(x, y, Direction(c)))
                 else:
                     rr.append(Rail(x, y, Direction.NONE))
 
-                if c in '^v<>':
+                if c in "^v<>":
                     carts.append(Cart(c_id, x, y, Direction(c)))
                     c_id += 1
 
@@ -185,32 +185,42 @@ def main():
                 continue
 
             cart.move(rails)
-            other = next((c for c in carts if c.id != cart.id and not c.crashed
-                          and (c.x, c.y) == (cart.x, cart.y)), None)
+            other = next(
+                (
+                    c
+                    for c in carts
+                    if c.id != cart.id
+                    and not c.crashed
+                    and (c.x, c.y) == (cart.x, cart.y)
+                ),
+                None,
+            )
 
             if other:
                 if not nb_crash:
-                    print('Part 1: %d,%d (ticks=%d)' % (cart.x, cart.y, ticks))
+                    print("Part 1: %d,%d (ticks=%d)" % (cart.x, cart.y, ticks))
 
                 cart.crashed = True
                 other.crashed = True
                 nb_carts = len([c for c in carts if not c.crashed])
                 nb_crash += 1
 
-                print('Crash! Carts %d / %d at (%d,%d). Carts left: %d' %
-                      (cart.id, other.id, cart.x, cart.y, nb_carts))
+                print(
+                    "Crash! Carts %d / %d at (%d,%d). Carts left: %d"
+                    % (cart.id, other.id, cart.x, cart.y, nb_carts)
+                )
 
     uncrashed = [c for c in carts if not c.crashed]
     if len(uncrashed) != 1:
-        raise ValueError('More than one uncrashed cart')
+        raise ValueError("More than one uncrashed cart")
 
     c = uncrashed[0]
     if not c.crashed:
-        print('Part 2: %d,%d (ticks=%d)' % (c.x, c.y, ticks))
+        print("Part 2: %d,%d (ticks=%d)" % (c.x, c.y, ticks))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     ts = time()
     main()
     ts = time() - ts
-    print('Done in %.3fms' % (ts * 1000))
+    print("Done in %.3fms" % (ts * 1000))

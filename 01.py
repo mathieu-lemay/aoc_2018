@@ -2,13 +2,12 @@
 
 import os.path
 
-
 freq = 0
 freqs = {freq}
 
 dupe_found = False
 
-with open(os.path.join('input', '01.txt')) as f:
+with open(os.path.join("input", "01.txt")) as f:
     inputs = [int(l) for l in f]
 
 print("Result: %d" % sum(inputs))
@@ -19,7 +18,7 @@ while not dupe_found:
         freq += d
 
         if freq in freqs:
-            print('First dupe: %d' % freq)
+            print("First dupe: %d" % freq)
             dupe_found = True
             break
 

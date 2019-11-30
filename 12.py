@@ -11,20 +11,20 @@ class Pattern:
 
 
 def fix_array(offset, arr):
-    if '#' not in arr:
+    if "#" not in arr:
         return offset, arr
 
     # Fix start
     s = 0
     for i in range(len(arr)):
-        if arr[i] == '#':
+        if arr[i] == "#":
             s = i
             break
 
     if s < 3:
         x = 3 - s
         offset -= x
-        arr = ['.'] * x + arr
+        arr = ["."] * x + arr
     elif s > 3:
         x = s - 3
         offset += x
@@ -33,13 +33,13 @@ def fix_array(offset, arr):
     # Fix end
     s = 0
     for i in range(len(arr)):
-        if arr[-(i + 1)] == '#':
+        if arr[-(i + 1)] == "#":
             s = i
             break
 
     if s < 3:
         x = 3 - s
-        arr = arr + ['.'] * x
+        arr = arr + ["."] * x
     elif s > 3:
         x = s - 3
         arr = arr[:-x]
@@ -48,7 +48,7 @@ def fix_array(offset, arr):
 
 
 def sum_plants(arr, offset):
-    return sum(i + offset for i, c in enumerate(arr) if c == '#')
+    return sum(i + offset for i, c in enumerate(arr) if c == "#")
 
 
 def main():
@@ -56,13 +56,13 @@ def main():
     generations = 20
     offset = 0
 
-    with open(os.path.join('input', '12.txt')) as f:
+    with open(os.path.join("input", "12.txt")) as f:
         l1 = f.readline()
-        og_array = [c for c in l1 if c in ('.', '#')]
+        og_array = [c for c in l1 if c in (".", "#")]
         _ = f.readline()
 
         for l in f:
-            in_, out = l.split(' => ')
+            in_, out = l.split(" => ")
             out = out[0]
             patterns.append(Pattern(in_, out))
 
@@ -73,22 +73,22 @@ def main():
         arr_new = []
         for i in range(0, len(arr)):
             if i < 2 or i > len(arr) - 2:
-                arr_new.append('.')
+                arr_new.append(".")
                 continue
 
-            cur = ''.join(arr[i - 2:i + 3])
+            cur = "".join(arr[i - 2 : i + 3])
 
             for p in patterns:
                 if cur == p.in_:
                     arr_new.append(p.out)
                     break
             else:
-                arr_new.append('.')
+                arr_new.append(".")
 
         arr = arr_new
 
     s = sum_plants(arr, offset)
-    print('Part 1: %d' % s)
+    print("Part 1: %d" % s)
 
     arr = og_array[:]
     offset = 0
@@ -104,19 +104,19 @@ def main():
         arr_new = []
         for i in range(0, len(arr)):
             if i < 2 or i > len(arr) - 2:
-                arr_new.append('.')
+                arr_new.append(".")
                 continue
 
-            cur = ''.join(arr[i - 2:i + 3])
+            cur = "".join(arr[i - 2 : i + 3])
 
             for p in patterns:
                 if cur == p.in_:
                     arr_new.append(p.out)
                     break
             else:
-                arr_new.append('.')
+                arr_new.append(".")
 
-        cksum = sum(i if c == '#' else 0 for i, c in enumerate(arr))
+        cksum = sum(i if c == "#" else 0 for i, c in enumerate(arr))
 
         if cksum == prev_cksum and offset - prev_offset == offset_delta:
             c += 1
@@ -124,7 +124,7 @@ def main():
             if c == 100:
                 last_gen = gen + 1
                 arr = arr_new
-                print('Stopped at gen %d offset is %d' % (last_gen, offset))
+                print("Stopped at gen %d offset is %d" % (last_gen, offset))
                 break
         else:
             c = 0
@@ -135,13 +135,13 @@ def main():
         prev_offset = offset
 
     s = sum_plants(arr, offset)
-    nb = len([c for c in arr if c == '#'])
+    nb = len([c for c in arr if c == "#"])
     s = (generations - last_gen) * nb + s
-    print('Part 2: %d' % s)
+    print("Part 2: %d" % s)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     ts = time()
     main()
     ts = time() - ts
-    print('Done in %.3fms' % (ts * 1000))
+    print("Done in %.3fms" % (ts * 1000))

@@ -21,8 +21,8 @@ class Point:
 
     def __repr__(self):
         cname = self.__class__.__name__
-        attrs = ', '.join('%s=%s' % (k, v) for k, v in self.__dict__.items())
-        return '<%s(%s)>' % (cname, attrs)
+        attrs = ", ".join("%s=%s" % (k, v) for k, v in self.__dict__.items())
+        return "<%s(%s)>" % (cname, attrs)
 
 
 def main():
@@ -43,33 +43,33 @@ def main():
         x = i + 1
         for j in range(grid_size - 3):
             y = j + 1
-            s = np.sum(grid[i:i+3, j:j+3])
+            s = np.sum(grid[i : i + 3, j : j + 3])
             if s > v1:
                 x1 = x
                 y1 = y
                 v1 = s
 
-    print('Part 1: %d,%d' % (x1, y1))
+    print("Part 1: %d,%d" % (x1, y1))
 
     x2 = y2 = k2 = v2 = 0
     for i in range(grid_size - 3):
         x = i + 1
-        print('P2: x = %d' % x)
+        print("P2: x = %d" % x)
         for j in range(grid_size - 3):
             y = j + 1
             for k in range(grid_size - max(i, j)):
-                s = np.sum(grid[i:i+k, j:j+k])
+                s = np.sum(grid[i : i + k, j : j + k])
                 if s > v2:
                     x2 = x
                     y2 = y
                     k2 = k
                     v2 = s
 
-    print('Part 2: %d,%d,%d' % (x2, y2, k2))
+    print("Part 2: %d,%d,%d" % (x2, y2, k2))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     ts = time()
     main()
     ts = time() - ts
-    print('Done in %.3fms' % (ts * 1000))
+    print("Done in %.3fms" % (ts * 1000))
