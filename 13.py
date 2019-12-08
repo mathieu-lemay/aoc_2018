@@ -127,7 +127,7 @@ def fill_rail_at(rails, x, y):
     if r_u and r_u.direction != Direction.LR and r_u.direction != Direction.NONE:
         _u = 1
 
-    if r_d and r_d.direction != Direction.LR and r_d.direction != Direction.NONE:
+    if r_d and r_d.direction != Direction.LR and r_d.direction != Direction.NONE and r_d.direction != Direction.LU_DR:
         _d = 1
 
     if r_l and r_l.direction != Direction.UD and r_l.direction != Direction.NONE:
